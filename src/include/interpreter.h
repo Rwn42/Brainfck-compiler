@@ -14,7 +14,6 @@ typedef enum BvmError{
     ERR_UNDERFLOW,
     ERR_HEAD_OUT_OF_BOUNDS,
     ERR_IP_OUT_OF_BOUNDS,
-    ERR_NO_MATCHING_LOOP,
     ERR_NO_ERROR,
     ERR_HALT,
 } BvmError;
@@ -29,4 +28,5 @@ typedef struct Bvm{
 } Bvm;
 
 BvmError BvmExecute(Bvm* m);
+const char* BvmStrError(BvmError e); 
 void BvmDestroy(Bvm *m);

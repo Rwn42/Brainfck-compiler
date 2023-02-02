@@ -19,7 +19,7 @@ int main(int argc, char **argv){
         BvmError result = BvmExecute(&m);
         if(result == ERR_HALT) return 0;
         if(result != ERR_NO_ERROR){
-            printf("ERROR:\n");
+            printf("ERROR: %s\n", BvmStrError(result));
             exit(1);
         }
     }

@@ -1,7 +1,6 @@
 #include "./include/common.h"
 #include "include/interpreter.h"
 #include "include/parser.h"
-#include <linux/limits.h>
 
 BvmError BvmExecute(Bvm* m)
 {  
@@ -9,11 +8,11 @@ BvmError BvmExecute(Bvm* m)
     Inst inst = m->program[m->ip++];
     switch(inst.operation){
         case INC:
-            if(m->tape[m->head] == SCHAR_MAX) return ERR_OVERFLOW;
+            if(m->tape[m->head] == SCHAR_MAX && !ALLOW_OVERFLOW) return ERR_OVERFLOW;
             m->tape[m->head]++;
             break;
         case DEC:
-            if(m->tape[m->head] == SCHAR_MIN) return ERR_UNDERFLOW;
+            if(m->tape[m->head] == SCHAR_MIN && !ALLOW_OVERFLOW) return ERR_UNDERFLOW;
             m->tape[m->head]--;
             break;
         case HEADL:
@@ -51,7 +50,7 @@ const char* BvmStrError(BvmError e){
     case ERR_HEAD_OUT_OF_BOUNDS:
         return "Memory Pointer Out Of Tape Bounds";
     case ERR_IP_OUT_OF_BOUNDS:
-        return "Invalid Instruction Offset";
+        return "Invalid Instruction Offset Or Program Complete";
     case ERR_NO_ERROR:
         return "No Error Instruction Executed";
     case ERR_HALT:

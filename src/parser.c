@@ -74,6 +74,9 @@ ProgramData BfInstructionsFromFile(const char* filepath){
             case '\n':
                 break;
             default:
+                if(isspace(ch)){
+                    break;
+                }
                 printf("Syntax Error: Unrecognized Character %c", ch);
                 exit(1);
         }   

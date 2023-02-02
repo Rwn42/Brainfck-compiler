@@ -13,3 +13,8 @@ To interpret the brainf*ck file use `./bfc hello.bf run`<br>
 *this is recommended to test the program for errors before native compiling. as the native compiler has no runtime checks.*
 
 
+## Configuration
+The `common.h` headerfile contains some useful configuration options for the interpreter and compiler.
+1. TAPE_MAX (controls the size of the tape default 1024)
+2. NESTING_MAX (controls maximum allowed nesting at one time default 256)
+3. ALLOW_OVERFLOW (default 0, if set to 1 the interpreter will allow overflows)

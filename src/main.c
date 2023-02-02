@@ -3,6 +3,7 @@
 #include <string.h>
 #include "include/parser.h"
 #include "include/interpreter.h"
+#include "include/compiler.h"
 
 void interpret(ProgramData pd);
 
@@ -27,7 +28,7 @@ int main(int argc, char **argv){
     }
 
     if(strcmp(mode, "run") == 0) interpret(pd);
-
+    free(pd.program);
 
 }
 
@@ -37,7 +38,7 @@ void interpret(ProgramData pd)
 
     while(1){
         BvmError result = BvmExecute(&m);
-        if(result == ERR_HALT) return;
+        if(result == ERR_HALT) exit(0);
         if(result != ERR_NO_ERROR){
             printf("ERROR: %s\n", BvmStrError(result));
             exit(1);

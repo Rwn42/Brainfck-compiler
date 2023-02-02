@@ -104,6 +104,10 @@ ProgramData BfInstructionsFromFile(const char* filepath){
             program[i] = (Inst){.operation = tk, .operand=start_loc};
         }
     }
+    if(block_stack.sp > 0){
+        printf("ERROR: Unclosed Block In Program\n");
+        exit(1);
+    }
 
     free(tokens);
 

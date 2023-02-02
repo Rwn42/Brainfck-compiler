@@ -28,7 +28,8 @@ int main(int argc, char **argv){
     }
 
     if(strcmp(mode, "run") == 0) interpret(pd);
-    free(pd.program);
+    
+    compileLinux("output.asm", pd);
 
 }
 

@@ -1,7 +1,5 @@
 #include "include/parser.h"
 #include "include/common.h"
-#include <stdio.h>
-
 
 typedef struct{
     int ips[NESTING_MAX];

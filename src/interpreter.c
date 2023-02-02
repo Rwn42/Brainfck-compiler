@@ -1,6 +1,4 @@
-#include "./include/common.h"
 #include "include/interpreter.h"
-#include "include/parser.h"
 
 BvmError BvmExecute(Bvm* m)
 {  
@@ -8,11 +6,11 @@ BvmError BvmExecute(Bvm* m)
     Inst inst = m->program[m->ip++];
     switch(inst.operation){
         case INC:
-            if(m->tape[m->head] == SCHAR_MAX && !ALLOW_OVERFLOW) return ERR_OVERFLOW;
+            if(m->tape[m->head] == BACKING_TYPE_MAX && !ALLOW_OVERFLOW) return ERR_OVERFLOW;
             m->tape[m->head]++;
             break;
         case DEC:
-            if(m->tape[m->head] == SCHAR_MIN && !ALLOW_OVERFLOW) return ERR_UNDERFLOW;
+            if(m->tape[m->head] == BACKING_TYPE_MIN && !ALLOW_OVERFLOW) return ERR_UNDERFLOW;
             m->tape[m->head]--;
             break;
         case HEADL:
@@ -31,11 +29,11 @@ BvmError BvmExecute(Bvm* m)
             break;
         case START_LOOP:
             if(m->tape[m->head] == 0) m->ip = inst.operand;
-            if(m->ip < 0 || m->ip >= m->program_length) return ERR_IP_OUT_OF_BOUNDS;
+            if(m->ip < 0 || m->ip > m->program_length) return ERR_IP_OUT_OF_BOUNDS;
             break;
         case END_LOOP:
             if(m->tape[m->head] != 0) m->ip = inst.operand;
-            if(m->ip < 0 || m->ip >= m->program_length) return ERR_IP_OUT_OF_BOUNDS;
+            if(m->ip < 0 || m->ip > m->program_length) return ERR_IP_OUT_OF_BOUNDS;
             break;
     }
     return ERR_NO_ERROR;

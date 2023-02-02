@@ -4,7 +4,6 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include <limits.h>
 #include "./parser.h"
 #include "./common.h"
 
@@ -23,7 +22,7 @@ typedef struct Bvm{
     int program_length;
     int ip;
 
-    char tape[TAPE_MAX];
+    BACKING_TYPE tape[TAPE_MAX];
     int head;
 } Bvm;
 

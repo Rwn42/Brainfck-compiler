@@ -11,13 +11,6 @@ void writeHeaderLinux(FILE* fp){
     fprintf(fp, "_start:\n");
     fprintf(fp, "mov r12, 0\n");
     fprintf(fp, "lea r14, tape\n");
-    //hello world stuff
-    // fprintf(fp, "mov rax, SYS_WRITE\n");
-    // fprintf(fp, "mov rdi, STDOUT\n");
-    // fprintf(fp, "mov rsi, message\n");
-    // fprintf(fp, "mov rdx, 13\n");
-    // fprintf(fp, "syscall\n");
-
 }
 
 
@@ -37,18 +30,14 @@ void writeFooterLinux(FILE* fp){
     fprintf(fp, "   xor rdi, rdi\n");
     fprintf(fp, "   syscall\n");
     fprintf(fp, "section .data\n");
-    //fprintf(fp, "global tape\n");
     fprintf(fp, "tape: TIMES %d dd 0 \n", TAPE_MAX);
 }
 
 void compileLinux(const char* output_path, ProgramData pd){
 
-    FILE* fp = fopen(output_path, "w");
-    if(fp == NULL)
-    {
-        printf("Unable To Open File: %s\n", strerror(errno));
-        exit(1);
-    }
+    FILE* fp = fopen("out.asm", "w");
+
+    printf("[INFO]: Compiling Into Assembly\n");
 
     writeHeaderLinux(fp);
 
@@ -56,35 +45,28 @@ void compileLinux(const char* output_path, ProgramData pd){
         Inst inst = pd.program[i];
         switch(inst.operation){
             case INC:
-                //fprintf(fp, "   mov r12, [head]\n");
                 fprintf(fp, "   inc dword [r14+r12*8]\n");
                 break;
             case DEC:
-                //fprintf(fp, "   mov r12, [head]\n");
                 fprintf(fp, "   dec dword [r14+r12*8]\n");
                 break;
             case HEADL:
-                //fprintf(fp, "   sub [head], byte 1\n");
                 fprintf(fp, "   dec r12\n");
                 break;
             case HEADR:
                 fprintf(fp, "   inc r12\n");
-                //fprintf(fp, "   add [head], byte 1\n");
                 break;
             case START_LOOP:
                 fprintf(fp, "loop_%d:\n", i);
-                //fprintf(fp, "   mov r12, [head]\n");
                 fprintf(fp, "   mov rax, [r14+r12*8]\n");
                 fprintf(fp, "   cmp rax, 0\n");
                 fprintf(fp, "   je loop_%d\n", inst.operand);
                 break;
             case END_LOOP:
-                //printf(fp, "   mov r12, [head]\n");
                 fprintf(fp, "   mov rax, [r14+r12*8]\n");
                 fprintf(fp, "   cmp rax, 0\n");
                 fprintf(fp, "   jne loop_%d\n", inst.operand);
                 fprintf(fp, "loop_%d:\n", i);
-
                 break;
             case GETC:
                 break;
@@ -100,4 +82,19 @@ void compileLinux(const char* output_path, ProgramData pd){
 
     fclose(fp);
     free(pd.program);
+
+    printf("[INFO]: Assembling File\n");
+
+    FILE* nasm_process = popen("nasm -felf64 -O3 out.asm -o out.o", "r");
+    pclose(nasm_process);
+
+    printf("[INFO]: Linking Final Executable\n");
+
+    char* command = malloc((strlen(output_path)+25) * sizeof(char));
+    sprintf(command, "ld out.o -o %s", output_path);
+    FILE* ld_process = popen(command, "r");
+    pclose(ld_process);
+
+    remove("out.o");
+    remove("out.asm");
 }

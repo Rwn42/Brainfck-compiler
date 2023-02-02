@@ -6,7 +6,7 @@
 #define NESTING_MAX 256
 
 //only applies to interpreter compiler always allows
-#define ALLOW_OVERFLOW 0
+#define ALLOW_OVERFLOW 1
 
 #define BACKING_TYPE signed char
 #define BACKING_TYPE_MIN SCHAR_MIN

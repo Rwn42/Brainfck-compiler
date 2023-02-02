@@ -14,23 +14,33 @@ int main(int argc, char **argv){
         exit(1);
     }
 
+    printf("[INFO]: Parsing File\n");
     ProgramData pd = BfInstructionsFromFile(argv[1]);
 
-    char* mode = "compile";
-    if(argc >= 3){
-        const char* subcommand = argv[2];
-        if(strcmp(subcommand, "run") == 0)
-        {
-            mode = "run";
-        }
-        else if(strcmp(subcommand, "compile") == 0);
-        else printf("ERROR: Unknown Subcommand %s", subcommand);
+    if(argc < 3)
+    {
+        printf("ERROR: Please Provide A Subcommand After Input FIle: run or compile\n");
+        exit(1);
     }
 
-    if(strcmp(mode, "run") == 0) interpret(pd);
-    
-    compileLinux("output.asm", pd);
+    const char* subcommand = argv[2];
 
+    if(strcmp(subcommand, "run") == 0)
+    {   
+        printf("[INFO]: Starting Interpreter\n");
+        interpret(pd);
+        exit(1);
+    }
+    else if(strcmp(subcommand, "compile") == 0);
+    else printf("ERROR: Unknown Subcommand %s\n", subcommand);
+
+    if(argc >= 4){
+        compileLinux(argv[3], pd);
+    }else{
+        compileLinux("output", pd);
+    }
+
+    printf("[INFO]: Compilation Succeeded\n");
 }
 
 void interpret(ProgramData pd)
@@ -39,7 +49,7 @@ void interpret(ProgramData pd)
 
     while(1){
         BvmError result = BvmExecute(&m);
-        if(result == ERR_HALT) exit(0);
+        if(result == ERR_HALT) break;
         if(result != ERR_NO_ERROR){
             printf("ERROR: %s\n", BvmStrError(result));
             exit(1);

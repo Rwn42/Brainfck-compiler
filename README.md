@@ -5,7 +5,7 @@ used assembly before let me know if there is any aggregious mistakes.
 **NOTE: Currently on linux is supported for the native compilation.**
 
 ## Todo
-- [ ] support for , in native compiler
+- [x] support for , in native compiler
 - [ ] port interpreter to windows
 - [ ] port compiler to windows
 - [ ] compiler optimizations

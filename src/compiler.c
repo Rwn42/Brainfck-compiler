@@ -4,6 +4,8 @@ void writeHeaderLinux(FILE* fp){
     fprintf(fp, "BITS 64\n");
     fprintf(fp, "%%define SYS_EXIT 60\n");
     fprintf(fp, "%%define SYS_WRITE 1\n");
+    fprintf(fp, "%%define SYS_READ 0\n");
+    fprintf(fp, "%%define STDIN 0\n");
     fprintf(fp, "%%define STDOUT 1\n");
     fprintf(fp, "%%define ENTRY_POINT _start\n");
     fprintf(fp, "global _start\n");
@@ -23,6 +25,16 @@ void writeFooterLinux(FILE* fp){
     fprintf(fp, "   add rcx, r14\n");
     fprintf(fp, "   mov rsi, rcx\n");
     fprintf(fp, "   mov rdx, 8\n");
+    fprintf(fp, "   syscall\n");
+    fprintf(fp, "   ret\n");
+    fprintf(fp, "get:\n");
+    fprintf(fp, "   mov rax, SYS_READ\n");
+    fprintf(fp, "   mov rdi, STDIN\n");
+    fprintf(fp, "   mov rdx, 8\n");
+    fprintf(fp, "   mov rcx, r12\n");
+    fprintf(fp, "   imul rcx, 8\n");
+    fprintf(fp, "   add rcx, r14\n");
+    fprintf(fp, "   mov rsi, rcx\n");
     fprintf(fp, "   syscall\n");
     fprintf(fp, "   ret\n");
     fprintf(fp, "exit: \n");
@@ -69,6 +81,7 @@ void compileLinux(const char* output_path, ProgramData pd){
                 fprintf(fp, "loop_%d:\n", i);
                 break;
             case GETC:
+                fprintf(fp, "call get\n");
                 break;
             case PUTC:
                 fprintf(fp, "call print\n");
@@ -96,5 +109,5 @@ void compileLinux(const char* output_path, ProgramData pd){
     pclose(ld_process);
 
     remove("out.o");
-    remove("out.asm");
+    //remove("out.asm");
 }

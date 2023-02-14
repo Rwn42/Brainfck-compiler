@@ -109,5 +109,5 @@ void compileLinux(const char* output_path, ProgramData pd){
     pclose(ld_process);
 
     remove("out.o");
-    //remove("out.asm");
+    remove("out.asm");
 }

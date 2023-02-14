@@ -32,7 +32,7 @@ The `common.h` headerfile contains some useful configuration options for the int
 
 ## Performance
 both clang (for interpreter and compile time) and nasm (for native speed) is using O3 optimizations for this test.
-It should be noted the interpreter is checking for out of bounds memory accesses and has the time for parsing the bf file including in its runtime. (neither program was attempted to be optimized on my end as of now).
+It should be noted the interpreter is checking for out of bounds memory accesses and has the time for parsing the bf file included in its runtime. (neither program was attempted to be optimized on my end as of now).
 
 | Program | Interpreter (s) | Compile Time (s) | Native Speed (s) |
 |-|-|-|-|
